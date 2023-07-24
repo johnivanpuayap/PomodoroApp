@@ -23,16 +23,24 @@ def start_timer():
     count_down(minutes, seconds)
 
 
+def stop_timer():
+    pass
+
+
 def count_down(minutes, seconds):
+    # Printing the Time
     if seconds < 10:
         canvas.itemconfig(timer_text, text=f"{minutes}:0{seconds}")
     else:
         canvas.itemconfig(timer_text, text=f"{minutes}:{seconds}")
-    if seconds > 0:
-        window.after(1000, count_down, minutes, seconds-1)
+
+    if seconds == 0 and minutes == 0:
+        stop_timer()
+    elif seconds > 0:
+        window.after(1000, count_down, minutes, seconds - 1)
     else:
         seconds = 59
-        window.after(1000, count_down, minutes-1, seconds)
+        window.after(1000, count_down, minutes - 1, seconds)
 
 
 # ---------------------------- UI SETUP ------------------------------- #
