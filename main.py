@@ -11,13 +11,19 @@ SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
 CHECK_MARK = "✓"
 reps = 1
+timer = None
 
 
 # ---------------------------- TIMER RESET ------------------------------- #
+def reset_timer():
+    window.after_cancel(timer)
+    canvas.itemconfig(timer_text, text="00:00")
+    label_timer.config(text="Timer", fg=GREEN)
+    pomodoro_counter.config(text="")
+    global reps
+    reps = 0
 
-# ---------------------------- TIMER MECHANISM ------------------------------- # 
-
-# ---------------------------- COUNTDOWN MECHANISM ------------------------------- #
+# ---------------------------- TIMER MECHANISM ------------------------------- #
 def start_timer():
     global reps
 
@@ -35,10 +41,7 @@ def start_timer():
     reps += 1
 
 
-def stop_timer():
-    pass
-
-
+# ---------------------------- COUNTDOWN MECHANISM ------------------------------- #
 def count_down(count):
     minutes = count // 60
     seconds = count % 60
@@ -49,14 +52,17 @@ def count_down(count):
     canvas.itemconfig(timer_text, text=f"{minutes}:{seconds}")
 
     if count >= 0:
-        window.after(1000, count_down, count - 1)
+        global timer
+        timer = window.after(1000, count_down, count - 1)
     else:
         start_timer()
         marks = ""
-        work_sessions = reps//2
+        work_sessions = reps // 2
         for i in range(work_sessions):
             marks += CHECK_MARK
         pomodoro_counter.config(text=marks)
+
+
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
 window.title("Pomodoro App")
@@ -74,7 +80,7 @@ label_timer.grid(column=1, row=0)
 button_start = Button(text='Start', highlightthickness=0, command=start_timer)
 button_start.grid(column=0, row=2)
 
-button_reset = Button(text='Reset', highlightthickness=0)
+button_reset = Button(text='Reset', highlightthickness=0, command=reset_timer)
 button_reset.grid(column=2, row=2)
 
 pomodoro_counter = Label(bg=YELLOW, fg=GREEN)
