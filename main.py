@@ -52,8 +52,11 @@ def count_down(count):
         window.after(1000, count_down, count - 1)
     else:
         start_timer()
-
-
+        marks = ""
+        work_sessions = reps//2
+        for i in range(work_sessions):
+            marks += CHECK_MARK
+        pomodoro_counter.config(text=marks)
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
 window.title("Pomodoro App")
@@ -74,7 +77,7 @@ button_start.grid(column=0, row=2)
 button_reset = Button(text='Reset', highlightthickness=0)
 button_reset.grid(column=2, row=2)
 
-pomodoro_counter = Label(text=CHECK_MARK, bg=YELLOW, fg=GREEN)
+pomodoro_counter = Label(bg=YELLOW, fg=GREEN)
 pomodoro_counter.config(pady=20)
 pomodoro_counter.grid(column=1, row=2)
 
