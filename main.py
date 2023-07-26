@@ -10,6 +10,7 @@ WORK_MIN = 25
 SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
 CHECK_MARK = "✓"
+reps = 1
 
 
 # ---------------------------- TIMER RESET ------------------------------- #
@@ -18,29 +19,39 @@ CHECK_MARK = "✓"
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- #
 def start_timer():
-    minutes = 25
-    seconds = 0
-    count_down(minutes, seconds)
+    global reps
+
+    if reps % 8 == 0:
+        count = LONG_BREAK_MIN * 60
+        label_timer.config(text="Break", fg=RED)
+    elif reps % 2 == 0:
+        count = SHORT_BREAK_MIN * 60
+        label_timer.config(text="Break", fg=PINK)
+    else:
+        count = WORK_MIN * 60
+        label_timer.config(text="Work", fg=GREEN)
+
+    count_down(count)
+    reps += 1
 
 
 def stop_timer():
     pass
 
 
-def count_down(minutes, seconds):
-    # Printing the Time
-    if seconds < 10:
-        canvas.itemconfig(timer_text, text=f"{minutes}:0{seconds}")
-    else:
-        canvas.itemconfig(timer_text, text=f"{minutes}:{seconds}")
+def count_down(count):
+    minutes = count // 60
+    seconds = count % 60
 
-    if seconds == 0 and minutes == 0:
-        stop_timer()
-    elif seconds > 0:
-        window.after(1000, count_down, minutes, seconds - 1)
+    if seconds < 10:
+        seconds = f"0{seconds}"
+
+    canvas.itemconfig(timer_text, text=f"{minutes}:{seconds}")
+
+    if count >= 0:
+        window.after(1000, count_down, count - 1)
     else:
-        seconds = 59
-        window.after(1000, count_down, minutes - 1, seconds)
+        start_timer()
 
 
 # ---------------------------- UI SETUP ------------------------------- #
